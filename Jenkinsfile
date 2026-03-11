@@ -9,6 +9,7 @@ pipeline {
         DOCKER_USERNAME = "saharsh1211"
         IMAGE_NAME = "online-book-store"
         IMAGE_TAG = "latest"
+        DOCKER_PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
     }
 
     stages {
@@ -27,7 +28,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %DOCKER_USERNAME%/%IMAGE_NAME%:%IMAGE_TAG% .'
+                bat '"%DOCKER_PATH%" build -t %DOCKER_USERNAME%/%IMAGE_NAME%:%IMAGE_TAG% .'
             }
         }
 
@@ -36,11 +37,11 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(
                         credentialsId: 'dockerhub-cred',
-                        usernameVariable: 'saharsh1211',
-                        passwordVariable: 'Saharsh@121'
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
                     )]) {
                         bat '''
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        echo %DOCKER_PASS% | "%DOCKER_PATH%" login -u %DOCKER_USER% --password-stdin
                         '''
                     }
                 }
@@ -49,7 +50,7 @@ pipeline {
 
         stage('Push Image to DockerHub') {
             steps {
-                bat 'docker push %DOCKER_USERNAME%/%IMAGE_NAME%:%IMAGE_TAG%'
+                bat '"%DOCKER_PATH%" push %DOCKER_USERNAME%/%IMAGE_NAME%:%IMAGE_TAG%'
             }
         }
 
