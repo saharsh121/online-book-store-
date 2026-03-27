@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         nodejs 'NodeJS_18'
-        maven 'Maven3'   // ✅ added Maven
+        maven 'Maven3'
     }
 
     environment {
@@ -21,14 +21,12 @@ pipeline {
             }
         }
 
-        // ✅ Maven verification stage
         stage('Verify Maven') {
             steps {
                 bat 'mvn -version'
             }
         }
 
-        // ✅ Optional Maven build (for viva/demo)
         stage('Maven Build') {
             steps {
                 bat 'mvn clean install'
@@ -49,14 +47,12 @@ pipeline {
 
         stage('Login to DockerHub') {
             steps {
-                script {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub-cred',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )]) {
-                        bat "\"%DOCKER_PATH%\" login -u %DOCKER_USER% -p %DOCKER_PASS%"
-                    }
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-cred',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat "\"%DOCKER_PATH%\" login -u %DOCKER_USER% -p %DOCKER_PASS%"
                 }
             }
         }
@@ -67,11 +63,10 @@ pipeline {
             }
         }
 
-        // ✅ Kubernetes Deployment (NEW)
+        // ✅ Kubernetes Deployment (ONLY deployment.yaml)
         stage('Deploy to Kubernetes') {
             steps {
-                bat 'kubectl apply -f k8s/deployment.yaml'
-                bat 'kubectl apply -f k8s/service.yaml'
+                bat 'kubectl apply -f deployment.yaml'
             }
         }
 
