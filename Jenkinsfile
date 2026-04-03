@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_USERNAME = "saharsh1211"
+        DOCKER_USERNAME = "anuragcodes"
         IMAGE_NAME = "online-book-store"
         IMAGE_TAG = "latest"
         DOCKER_PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"
