@@ -66,7 +66,7 @@ pipeline {
         // ✅ Kubernetes Deployment (ONLY deployment.yaml)
         stage('Deploy to Kubernetes') {
             steps {
-                bat 'kubectl apply -f deployment.yaml'
+                bat 'kubectl --kubeconfig=config apply -f deployment.yaml'
             }
         }
 
