@@ -63,10 +63,12 @@ pipeline {
             }
         }
 
-        // ✅ Kubernetes Deployment (ONLY deployment.yaml)
+        // ✅ FIXED Kubernetes Deployment
         stage('Deploy to Kubernetes') {
             steps {
-                bat 'kubectl --kubeconfig=config apply -f deployment.yaml'
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    bat 'kubectl apply -f deployment.yaml'
+                }
             }
         }
 
